@@ -1,0 +1,34 @@
+﻿@model ExpenseCreateViewModel
+@{
+    ViewData["title"] = "New Expense";
+}
+<form asp-controller="Expense" asp-action="create" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Omschrijving"></label>
+        <input asp-for="Omschrijving" class="form-control" />
+        <span class="text-danger" asp-validation-for="Omschrijving"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Datum"></label>
+        <input asp-for="Datum" class="form-control" />
+        <span class="text-danger" asp-validation-for="Datum"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Bedrag"></label>
+        <input asp-for="Bedrag" class="form-control" />
+        <span class="text-danger" asp-validation-for="Bedrag"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Categorie"></label>
+        <select asp-for="Categorie" asp-items="@Model.Categories" class="form-control"></select>
+        <span class="text-danger" asp-validation-for="Categorie"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Photo"></label>
+        <input asp-for="Photo" class="form-control" />
+        <span class="text-danger" asp-validation-for="Photo"></span>
+    </div>
+    <button class="btn btn-success" type="submit">Create</button>
+</form>

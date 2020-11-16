@@ -1,0 +1,110 @@
+﻿@model ExpenseListViewModel
+@using System.Globalization;
+@{
+    ViewData["Title"] = "Uitgaven rapport";
+    Dictionary<int, string> Months = new Dictionary<int, string>();
+
+    Months.Add(0, "alle maanden");
+    Months.Add(1, "Januari");
+    Months.Add(2, "Februari");
+    Months.Add(3, "Maart");
+    Months.Add(4, "April");
+    Months.Add(5, "Mei");
+    Months.Add(6, "Juni");
+    Months.Add(7, "Juli");
+    Months.Add(8, "Augustus");
+    Months.Add(9, "September");
+    Months.Add(10, "Oktober");
+    Months.Add(11, "November");
+    Months.Add(12, "December");
+}
+
+<form asp-controller="Expense" asp-action="Index" method="post">
+    <div class="form-group">
+        <label asp-for="SelectedMonth">kies een maand:</label>
+        <select asp-for="SelectedMonth">
+            @foreach (var item in Months)
+            {
+                <option value=@item.Key>@item.Value</option>
+            }
+        </select>
+        <label asp-for="SelectedYear">kies een jaar:</label>
+        <select asp-for="SelectedYear">
+            <option value=0>Alle</option>
+            @foreach (int item in Model.Years)
+            {
+                <option value=@item>@item</option>
+            }
+        </select>
+    </div>
+    <button class="btn btn-success" type="submit">Overzicht</button>
+</form>
+
+@if (Model.List.Count <= 0)
+{
+    <p>er zijn nog geen expenses gemaakt</p>
+}
+else
+{
+    <h2>
+        expenses voor @Months[Model.SelectedMonth] van @if (Model.SelectedYear == 0)
+        {
+            <text>alle jaren</text>;
+        }
+        else
+        {
+            Model.SelectedYear.ToString();
+        }
+    </h2>
+    <table class="table-striped">
+        <tr>
+            <th>Omschrijving</th>
+            <th>Datum</th>
+            <th>Bedrag</th>
+            <th></th>
+        </tr>
+        @foreach (ExpenseListItemViewModel Expense in Model.List)
+        {
+            <tr>
+                <td>@Expense.Omschrijving (@Expense.Categorie)</td>
+                <td>@Expense.Datum.ToString("dd MMM yyyy")</td>
+                <td>@Expense.Bedrag.ToString("C")</td>
+                <td>
+                    <a class="btn btn-info" asp-controller="Expense" asp-action="detail" asp-route-id="@Expense.Id">Detail</a>
+                    <a class="btn btn-primary" asp-controller="Expense" asp-action="Edit" asp-route-id="@Expense.Id">Edit</a>
+                    <a class="btn btn-danger" asp-controller="Expense" asp-action="Delete" asp-route-id="@Expense.Id" onclick="return confirm('ben je zeker dat je dit wilt verwijderen?')">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+<a asp-controller="Expense" asp-action="Create" class="btn btn-primary">Add new</a>
+<h3>hoogste uitgave(s):</h3>
+@foreach (ExpenseListItemViewModel Expense in Model.Highest)
+{
+    <p><a asp-controller="Expense" asp-action="detail" asp-route-id="@Expense.Id">@Expense.Omschrijving || @Expense.Bedrag.ToString("C")</a></p>
+}
+
+<h3>laagste uitgave(s):</h3>
+
+@foreach (ExpenseListItemViewModel Expense in Model.Lowest)
+{
+    <p> <a asp-controller="Expense" asp-action="detail" asp-route-id="@Expense.Id">@Expense.Omschrijving || @Expense.Bedrag.ToString("C")</a></p>
+}
+<h3>duurste dag(en)</h3>
+@foreach (var item in Model.MostExpensiveDays)
+{
+    <p>@item.Key.ToShortDateString(): @item.Value.ToString("C")</p>
+}
+
+<h3>duurste categorie(en)</h3>
+@foreach (var item in Model.MostExpensiveCategories)
+{
+    <p>@item.Key: @item.Value.ToString("C")</p>
+}
+
+<h3>goedkoopste categorie(en)</h3>
+@foreach (var item in Model.CheapestCategories)
+{
+    <p>@item.Key: @item.Value.ToString("C")</p>
+}

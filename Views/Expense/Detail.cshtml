@@ -1,0 +1,25 @@
+﻿@model ExpenseDetailViewModel
+@{
+    ViewData["title"] = $"Detail";
+}
+
+<h2> Omschrijving</h2>
+<p>@Model.Omschrijving</p>
+
+<h2>Datum</h2>
+<p>@Model.Datum</p>
+
+<h2>Bedrag</h2>
+
+<p>@Model.Bedrag.ToString("C")</p>
+
+<h2>Categorie</h2>
+<p>@Model.Categorie</p>
+
+@if (Model.PhotoUrl != null)
+{
+    <h2>Photo</h2>
+    <img src="@Model.PhotoUrl" />
+}
+
+<a class="btn btn-success" asp-controller="Expense" asp-action="Index">Back</a>
