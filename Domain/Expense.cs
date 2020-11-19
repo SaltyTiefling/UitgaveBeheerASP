@@ -13,6 +13,5 @@ namespace Uitgave_Beheer.Domain
         public double Bedrag { get; set; }
         public string Categorie { get; set; }
         public string PhotoUrl { get; set; }
-
     }
 }
